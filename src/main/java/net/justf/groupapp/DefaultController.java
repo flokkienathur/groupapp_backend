@@ -72,8 +72,8 @@ public class DefaultController {
 		
         return app.getGroups();
     }
-	
-	@RequestMapping(value="/groups/create", method={RequestMethod.POST})
+
+	@RequestMapping(value="/groups/set_teacher", method={RequestMethod.POST})
     public ArrayList<Group> groupSetTeacher(
     		@RequestParam(value = "group_id", required = true) int groupId,
     		@RequestParam(value = "teacher_id", required = true) int teacherId

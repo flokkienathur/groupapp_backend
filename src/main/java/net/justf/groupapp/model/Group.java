@@ -16,6 +16,7 @@ public class Group {
 	public Group(String name){
 		this.setName(name);
 		setId(currentId++);
+		students = new ArrayList<Student>();
 	}
 	
 	public boolean hasStudent(Student s){

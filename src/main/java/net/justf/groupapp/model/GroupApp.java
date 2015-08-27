@@ -2,6 +2,8 @@ package net.justf.groupapp.model;
 
 import java.util.ArrayList;
 
+import net.justf.groupapp.misc.NameGenerator;
+
 public class GroupApp {
 	
 	private ArrayList<Group> groups;
@@ -12,6 +14,33 @@ public class GroupApp {
 		groups = new ArrayList<Group>();
 		teachers = new ArrayList<Teacher>();
 		students = new ArrayList<Student>();
+	}
+
+	public Group getGroupById(int id){
+		for(Group g : groups){
+			if(g.getId() == id){
+				return g;
+			}
+		}
+		return null;
+	}
+
+	public Student getStudentById(int id){
+		for(Student s : students){
+			if(s.getId() == id){
+				return s;
+			}
+		}
+		return null;
+	}
+	
+	public Teacher getTeacherById(int id){
+		for(Teacher t : teachers){
+			if(t.getId() == id){
+				return t;
+			}
+		}
+		return null;
 	}
 	
 	public ArrayList<Group> getGroups() {
@@ -34,7 +63,18 @@ public class GroupApp {
 	}
 	
 	public static GroupApp load(){
-		return new GroupApp();
+		GroupApp app = new GroupApp();
+		for(int i = 0; i < 100; i++){
+			app.getStudents().add(new Student(NameGenerator.randomName(), "NOTYVM"+NameGenerator.randomName()));
+			app.getTeachers().add(new Teacher("D" + NameGenerator.randomName(), "DNO"+NameGenerator.randomName()));
+		}
+		
+		for(int i = 0; i < 7; i++){
+			Group g = new Group("Group : " + NameGenerator.randomName());
+			app.getGroups().add(g);
+		}
+		
+		return app;
 	}
 	
 	

@@ -1,26 +1,16 @@
 package net.justf.groupapp.model;
 
-public class Person {
-	
-	private static int currentId = 1000;
+public abstract class Person {
 	
 	private int id;
 	
 	private String firstName;
 	private String lastName;
-
-	protected Person(){
-		
-	}
 	
 	public Person(int id, String firstName, String lastName){
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
 		this.id = id;
-	}
-
-	public Person(String firstName, String lastName){
-		this(currentId++, firstName, lastName);
 	}
 
 	public String getLastName() {

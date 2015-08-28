@@ -1,8 +1,8 @@
 package net.justf.groupapp.model;
 
 import java.util.ArrayList;
-
-import net.justf.groupapp.misc.NameGenerator;
+import java.util.List;
+import static net.justf.groupapp.model.GroupAppDB.*;
 
 public class GroupApp {
 	
@@ -10,10 +10,18 @@ public class GroupApp {
 	private ArrayList<Teacher> teachers;
 	private ArrayList<Student> students;
 	
-	public GroupApp(){
+	protected int studentId = 0;
+	protected int teacherId = 0;
+	protected int groupId = 0;
+	
+	private GroupAppDB database;
+	
+	public GroupApp(GroupAppDB database){
 		groups = new ArrayList<Group>();
 		teachers = new ArrayList<Teacher>();
 		students = new ArrayList<Student>();
+		
+		this.database = database;
 	}
 
 	public Group getGroupById(int id){
@@ -43,38 +51,33 @@ public class GroupApp {
 		return null;
 	}
 	
-	public ArrayList<Group> getGroups() {
-		return groups;
+	public List<Group> getGroups() {
+		return database.getGroups();
 	}
-	public void setGroups(ArrayList<Group> groups) {
-		this.groups = groups;
+	public List<Teacher> getTeachers() {
+		return database.getTeachers();
 	}
-	public ArrayList<Teacher> getTeachers() {
-		return teachers;
+	public List<Student> getStudents() {
+		return database.getStudents();
 	}
-	public void setTeachers(ArrayList<Teacher> teachers) {
-		this.teachers = teachers;
+
+	public void createStudent(String firstName, String lastName){
+		database.insert(TABLE_STUDENTS, VALUES_STUDENTS, firstName, lastName);
 	}
-	public ArrayList<Student> getStudents() {
-		return students;
+	public void createTeacher(String firstName, String lastName){
+		database.insert(TABLE_TEACHERS, VALUES_TEACHERS, firstName, lastName);
 	}
-	public void setStudents(ArrayList<Student> students) {
-		this.students = students;
+	public void createGroup(String name){
+		database.insert(TABLE_GROUPS, VALUES_GROUPS, name);
 	}
-	
-	public static GroupApp load(){
-		GroupApp app = new GroupApp();
-		for(int i = 0; i < 100; i++){
-			app.getStudents().add(new Student(NameGenerator.randomName(), "NOTYVM"+NameGenerator.randomName()));
-			app.getTeachers().add(new Teacher("D" + NameGenerator.randomName(), "DNO"+NameGenerator.randomName()));
-		}
-		
-		for(int i = 0; i < 7; i++){
-			Group g = new Group("Group : " + NameGenerator.randomName());
-			app.getGroups().add(g);
-		}
-		
-		return app;
+	public void removeStudent(int id){
+		database.delete(TABLE_STUDENTS, id);
+	}
+	public void removeTeacher(int id){
+		database.delete(TABLE_TEACHERS, id);
+	}
+	public void removeGroup(int id){
+		database.delete(TABLE_GROUPS, id);
 	}
 	
 	

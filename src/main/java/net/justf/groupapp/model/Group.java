@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Group {
 	
-	private static int currentId = 1000;
-	
 	private int id;
 	
 	private ArrayList<Student> students;
@@ -13,12 +11,13 @@ public class Group {
 	
 	private String name;
 	
-	public Group(String name){
+	public Group(int id, String name){
 		this.setName(name);
-		setId(currentId++);
+		setId(id);
 		students = new ArrayList<Student>();
 	}
 	
+
 	public boolean hasStudent(Student s){
 		return students.contains(s);
 	}

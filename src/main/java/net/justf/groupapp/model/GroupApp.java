@@ -1,54 +1,15 @@
 package net.justf.groupapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import static net.justf.groupapp.model.GroupAppDB.*;
 
 public class GroupApp {
 	
-	private ArrayList<Group> groups;
-	private ArrayList<Teacher> teachers;
-	private ArrayList<Student> students;
-	
-	protected int studentId = 0;
-	protected int teacherId = 0;
-	protected int groupId = 0;
 	
 	private GroupAppDB database;
 	
 	public GroupApp(GroupAppDB database){
-		groups = new ArrayList<Group>();
-		teachers = new ArrayList<Teacher>();
-		students = new ArrayList<Student>();
-		
 		this.database = database;
-	}
-
-	public Group getGroupById(int id){
-		for(Group g : groups){
-			if(g.getId() == id){
-				return g;
-			}
-		}
-		return null;
-	}
-
-	public Student getStudentById(int id){
-		for(Student s : students){
-			if(s.getId() == id){
-				return s;
-			}
-		}
-		return null;
-	}
-	
-	public Teacher getTeacherById(int id){
-		for(Teacher t : teachers){
-			if(t.getId() == id){
-				return t;
-			}
-		}
-		return null;
 	}
 	
 	public List<Group> getGroups() {
@@ -59,6 +20,20 @@ public class GroupApp {
 	}
 	public List<Student> getStudents() {
 		return database.getStudents();
+	}
+
+	//TODO: update
+	public void groupAddStudent(int groupId, int studentId){
+		database.exectuteRaw("UPDATE students SET inGroup=" +groupId+ " WHERE id="+studentId);
+	}
+	public void groupRemoveStudent(int groupId, int studentId){
+		database.exectuteRaw("UPDATE students SET inGroup=" +0+ " WHERE id="+studentId);
+	}
+	
+	//TODO: create:
+	public void groupSetTeacher(int groupId, int teacherId){
+		database.exectuteRaw("UPDATE teachers SET mentor=" +0+ " WHERE NOT id="+teacherId+" AND mentor="+groupId);
+		database.exectuteRaw("UPDATE teachers SET mentor=" +groupId+ " WHERE id="+teacherId);
 	}
 
 	public void createStudent(String firstName, String lastName){

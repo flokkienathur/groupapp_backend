@@ -11,6 +11,8 @@ import java.util.List;
 public class GroupAppDB {
 
 	public static final String CONST_ID = "id";
+	public static final String CONST_MENTOR = "mentor";
+	public static final String CONST_INGROUP = "inGroup";
 	public static final String CONST_FIRSTNAME = "firstName";
 	public static final String CONST_LASTNAME = "lastName";
 	public static final String CONST_NAME = "name";
@@ -46,7 +48,8 @@ public class GroupAppDB {
 			resultSet = statement.executeQuery("SELECT * FROM " + TABLE_STUDENTS + " WHERE " + filter);
 			
 			while(resultSet.next()){
-				Student s = new Student(resultSet.getInt("id"), resultSet.getString(CONST_FIRSTNAME), resultSet.getString(CONST_LASTNAME));
+				Student s = new Student(resultSet.getInt(CONST_ID), resultSet.getString(CONST_FIRSTNAME), resultSet.getString(CONST_LASTNAME));
+				s.setInGroup(resultSet.getInt(CONST_INGROUP));
 				list.add(s);
 			}
 			
@@ -79,9 +82,36 @@ public class GroupAppDB {
 			resultSet = statement.executeQuery("SELECT * FROM " + TABLE_GROUPS + " WHERE " + filter);
 			
 			while(resultSet.next()){
-				Group group = new Group(resultSet.getInt("id"), resultSet.getString(CONST_NAME));
+				Group group = new Group(resultSet.getInt(CONST_ID), resultSet.getString(CONST_NAME));
 				
 				list.add(group);
+			}
+			for(Group group : list){
+				
+				ResultSet teacherResult = null;
+				ResultSet studentResult = null;
+				try{
+					
+					teacherResult = statement.executeQuery("SELECT * FROM " + TABLE_TEACHERS + " WHERE " + CONST_MENTOR + "=" + group.getId());
+					while(teacherResult.next()){
+						Teacher s = new Teacher(teacherResult.getInt("id"), teacherResult.getString(CONST_FIRSTNAME), teacherResult.getString(CONST_LASTNAME));
+						s.setMentor(resultSet.getInt(CONST_MENTOR));
+						group.setTeacher(s);
+					}
+					
+					studentResult = statement.executeQuery("SELECT * FROM " + TABLE_STUDENTS + " WHERE " + CONST_INGROUP + "=" + group.getId());
+					while(studentResult.next()){
+						Student s = new Student(studentResult.getInt(CONST_ID), studentResult.getString(CONST_FIRSTNAME), studentResult.getString(CONST_LASTNAME));
+						s.setInGroup(resultSet.getInt(CONST_INGROUP));
+						group.addStudent(s);
+					}
+					
+				}catch(Exception e){
+					e.printStackTrace();
+				}finally{
+					safeClose(teacherResult, studentResult);
+				}
+				
 			}
 			
 			return list;	
@@ -112,6 +142,7 @@ public class GroupAppDB {
 			
 			while(resultSet.next()){
 				Teacher s = new Teacher(resultSet.getInt("id"), resultSet.getString(CONST_FIRSTNAME), resultSet.getString(CONST_LASTNAME));
+				s.setMentor(resultSet.getInt(CONST_MENTOR));
 				list.add(s);
 			}
 			
@@ -149,8 +180,6 @@ public class GroupAppDB {
 		
 		builder.append(")");
 		
-		System.out.println(builder);
-		
 		return exectuteRaw(builder.toString());
 	}
 	
@@ -182,14 +211,20 @@ public class GroupAppDB {
 		return DriverManager.getConnection("jdbc:sqlite:"+database+".db");
 	}
 
-	private boolean exectuteRaw(String raw){
+	public boolean exectuteRaw(String... raw){
 		Connection connection = null;
 		Statement statement = null;
 		try{
 			connection = open();
 			statement = connection.createStatement();
 			
-			return statement.execute(raw);
+			boolean success = true;
+			
+			for(String s : raw){
+				success = success && statement.execute(s);
+			}
+			
+			return success;
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

@@ -7,6 +7,7 @@ public abstract class Person {
 	private String firstName;
 	private String lastName;
 	
+	
 	public Person(int id, String firstName, String lastName){
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
@@ -32,6 +33,7 @@ public abstract class Person {
 	public int getId() {
 		return id;
 	}
+	
 
 	public void setId(int id) {
 		this.id = id;

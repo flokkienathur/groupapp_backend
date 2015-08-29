@@ -103,22 +103,13 @@ public class DefaultController {
         return app.getGroups();
     }
 	
-	//TODO LEFT:
 	@RequestMapping(value="/groups/set_teacher", method={RequestMethod.POST})
     public List<Group> groupSetTeacher(
     		@RequestParam(value = "groupId", required = true) int groupId,
     		@RequestParam(value = "teacherId", required = true) int teacherId
     		) {
 		
-		Group group = app.getGroupById(groupId);
-		Teacher teacher = app.getTeacherById(teacherId);
-		
-		if(group == null)
-			return app.getGroups();
-		
-		//teacher can be null to remove the teacher
-		
-		group.setTeacher(teacher);
+		app.groupSetTeacher(groupId, teacherId);
 		
         return app.getGroups();
     }
@@ -127,17 +118,8 @@ public class DefaultController {
     		@RequestParam(value = "groupId", required = true) int groupId,
     		@RequestParam(value = "studentId", required = true) int studentId
     		) {
-		
-		Group group = app.getGroupById(groupId);
-		Student student = app.getStudentById(studentId);
-		
-		if(group == null)
-			return app.getGroups();
-		if(student == null)
-			return app.getGroups();
-		
-		if(!group.hasStudent(student))
-			group.addStudent(student);
+
+		app.groupAddStudent(groupId, studentId);
 		
         return app.getGroups();
     }
@@ -147,16 +129,7 @@ public class DefaultController {
     		@RequestParam(value = "studentId", required = true) int studentId
     		) {
 		
-		Group group = app.getGroupById(groupId);
-		Student student = app.getStudentById(studentId);
-		
-		if(group == null)
-			return app.getGroups();
-		if(student == null)
-			return app.getGroups();
-		
-		if(group.hasStudent(student))
-			group.removeStudent(student);
+		app.groupRemoveStudent(groupId, studentId);
 		
         return app.getGroups();
     }

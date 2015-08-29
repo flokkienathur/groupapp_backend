@@ -17,6 +17,9 @@ public class Group {
 		students = new ArrayList<Student>();
 	}
 	
+	public ArrayList<Student> getStudents(){
+		return students;
+	}
 
 	public boolean hasStudent(Student s){
 		return students.contains(s);
